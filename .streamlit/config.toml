@@ -1,0 +1,33 @@
+# Modern SaaS theme. Light and dark variants follow the viewer's system setting.
+[theme]
+baseRadius = "0.6rem"
+showWidgetBorder = true
+chartCategoricalColors = ["#4F46E5", "#0EA5E9", "#94A3B8", "#14B8A6", "#F59E0B", "#EC4899"]
+
+[theme.light]
+primaryColor = "#4F46E5"
+backgroundColor = "#F8FAFC"
+secondaryBackgroundColor = "#FFFFFF"
+textColor = "#0F172A"
+borderColor = "#E2E8F0"
+linkColor = "#4F46E5"
+
+[theme.dark]
+primaryColor = "#818CF8"
+backgroundColor = "#0B0D12"
+secondaryBackgroundColor = "#141821"
+textColor = "#E5E7EB"
+borderColor = "#262B36"
+linkColor = "#A5B4FC"
+
+[theme.light.sidebar]
+backgroundColor = "#FFFFFF"
+
+[theme.dark.sidebar]
+backgroundColor = "#10131A"
+
+[client]
+toolbarMode = "minimal"
+
+[browser]
+gatherUsageStats = false
