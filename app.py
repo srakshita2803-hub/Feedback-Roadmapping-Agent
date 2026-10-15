@@ -14,6 +14,7 @@ import pandas as pd
 import streamlit as st
 
 from roadmap_agent import report
+from roadmap_agent.agent import PROVIDERS
 from roadmap_agent.offline import cluster_offline
 from roadmap_agent.store import EFFORT_POINTS, WEIGHTS, FeedbackStore
 
@@ -115,15 +116,28 @@ with st.sidebar:
     st.download_button("Download CSV template", SAMPLE.read_bytes(), "feedback_template.csv", "text/csv",
                        width="stretch")
 
-    st.subheader("Engine", divider="gray")
-    engine = st.segmented_control("Clustering engine", ["Claude agent", "Offline baseline"],
-                                  default="Claude agent", label_visibility="collapsed")
-    server_key = os.environ.get("ANTHROPIC_API_KEY", "")
-    user_key = st.text_input("Anthropic API key", type="password",
-                             placeholder="Using the server's key" if server_key else "sk-ant-…",
-                             help="Used for the Claude engine, Ask the agent, and PRD drafts. "
-                                  "A key set on the server is never sent to your browser.")
+    st.subheader("AI provider", divider="gray")
+    provider_name = st.segmented_control("AI provider", list(PROVIDERS.values()), default="Claude",
+                                         label_visibility="collapsed",
+                                         help="Used by the AI agent, Ask the agent, and PRD drafts.")
+    provider = "gemini" if provider_name == "Gemini" else "claude"
+    if provider == "gemini":
+        server_key = os.environ.get("GEMINI_API_KEY") or os.environ.get("GOOGLE_API_KEY", "")
+        key_label, key_hint = "Gemini API key", "AIza…"
+        st.caption("Get a free key at [aistudio.google.com](https://aistudio.google.com/app/apikey).")
+    else:
+        server_key = os.environ.get("ANTHROPIC_API_KEY", "")
+        key_label, key_hint = "Anthropic API key", "sk-ant-…"
+    user_key = st.text_input(key_label, type="password", key=f"key_{provider}",
+                             placeholder="Using the server's key" if server_key else key_hint,
+                             help="A key set on the server is never sent to your browser.")
     api_key = user_key or server_key
+    ai = PROVIDERS[provider]
+
+    st.subheader("Clustering engine", divider="gray")
+    engine = st.segmented_control("Clustering engine", ["AI agent", "Offline baseline"],
+                                  default="AI agent", label_visibility="collapsed",
+                                  help="The offline baseline uses keyword rules and needs no API key.")
     run = st.button("Build roadmap", type="primary", width="stretch", icon="✨")
 
 
@@ -143,18 +157,20 @@ except Exception as e:
 
 # ---------------------------------------------------------------- run the agent
 if run:
-    if engine == "Claude agent" and not api_key:
+    if engine == "AI agent" and not api_key:
         st.sidebar.error("Add an API key, or switch to the offline baseline.")
     else:
         try:
-            if engine == "Claude agent":
+            if engine == "AI agent":
                 from roadmap_agent.agent import run_agent
-                with st.status("Claude is reading and clustering your feedback…", expanded=True) as status:
-                    result = run_agent(raw_store, on_event=lambda line: st.caption(line), api_key=api_key)
+                with st.status(f"{ai} is reading and clustering your feedback…", expanded=True) as status:
+                    result = run_agent(raw_store, on_event=lambda line: st.caption(line), api_key=api_key,
+                                       provider=provider)
                     status.update(label="Roadmap ready", state="complete", expanded=False)
             else:
                 result = cluster_offline(raw_store)
-            ss.update(store=raw_store, result=result, engine=engine, chat=[], prds={})
+            ss.update(store=raw_store, result=result, chat=[], prds={},
+                      engine=f"{ai} agent" if engine == "AI agent" else "Offline baseline")
         except Exception as e:
             st.error(f"Run failed: {e}")
 
@@ -163,7 +179,7 @@ if "store" not in ss:
     html("""<div class='hero'><h1>Turn feedback noise into a roadmap.</h1>
       <p>Signal reads every feature request from app reviews, support tickets, sales calls, surveys and social,
       clusters them by the underlying need, and ranks what customers want most, backed by the evidence.</p>
-      <div class='pills'><span class='pill'>Claude-powered clustering</span><span class='pill'>Transparent scoring</span>
+      <div class='pills'><span class='pill'>Claude or Gemini clustering</span><span class='pill'>Transparent scoring</span>
       <span class='pill'>Now / Next / Later roadmap</span><span class='pill'>PRD drafts</span></div></div>""")
     steps = [("Ingest", "Upload a CSV/JSON export from any channel, or use the sample data."),
              ("Cluster", "The agent groups requests by user need and flags churn and deal risks."),
@@ -218,7 +234,7 @@ ranked, summary = rep["roadmap"], rep["summary"]
 filtered = len(keep) < len(all_fb)
 
 # ---------------------------------------------------------------- header
-engine_pill = "Claude agent" if ss.engine == "Claude agent" else "Offline baseline"
+engine_pill = ss.engine
 html(f"""<div class='hero'><h1>Product roadmap</h1>
   <p>{summary['total_feedback']} feedback items from {len(summary['by_channel'])} channels, grouped into
   {len(ranked)} roadmap themes.</p>
@@ -402,14 +418,14 @@ with tabs[4]:
                      column_config={"Feedback": st.column_config.TextColumn(width="large")})
     with b:
         st.markdown("##### Draft a PRD")
-        st.caption("Claude writes a one-page PRD from this theme's customer evidence.")
+        st.caption(f"{ai} writes a one-page PRD from this theme's customer evidence.")
         prds = ss.setdefault("prds", {})
-        if st.button("✍️ Draft PRD with Claude", width="stretch", disabled=not api_key,
+        if st.button(f"✍️ Draft PRD with {ai}", width="stretch", disabled=not api_key,
                      help=None if api_key else "Add an API key in the sidebar"):
             from roadmap_agent.assistant import draft_prd
             try:
                 with st.container(border=True):
-                    prds[pick["id"]] = st.write_stream(draft_prd(api_key, view, pick))
+                    prds[pick["id"]] = st.write_stream(draft_prd(provider, api_key, view, pick))
             except Exception as e:
                 st.error(f"PRD failed: {e}")
         elif pick["id"] in prds:
@@ -419,13 +435,13 @@ with tabs[4]:
             st.download_button("Download PRD (.md)", prds[pick["id"]],
                                f"PRD-{pick['name'][:40].replace(' ', '-').replace('/', '-')}.md", width="stretch")
         if not api_key:
-            st.info("Add an Anthropic API key in the sidebar to draft PRDs.", icon="🔑")
+            st.info(f"Add a {ai} API key in the sidebar to draft PRDs.", icon="🔑")
 
 # ---------------------------------------------------------------- ask the agent
 with tabs[5]:
-    st.caption("Ask follow-up questions. Claude answers from this analysis only, citing feedback ids.")
+    st.caption(f"Ask follow-up questions. {ai} answers from this analysis only, citing feedback ids.")
     if not api_key:
-        st.info("Add an Anthropic API key in the sidebar to chat with the agent.", icon="🔑")
+        st.info(f"Add a {ai} API key in the sidebar to chat with the agent.", icon="🔑")
     chat = ss.setdefault("chat", [])
     cols = st.columns(len(SUGGESTIONS))
     clicked = next((q for col, q in zip(cols, SUGGESTIONS)
@@ -446,7 +462,7 @@ with tabs[5]:
                 st.markdown(question)
             with st.chat_message("assistant", avatar="🧭"):
                 try:
-                    answer = st.write_stream(ask(api_key, view, ranked, chat))
+                    answer = st.write_stream(ask(provider, api_key, view, ranked, chat))
                     chat.append({"role": "assistant", "content": answer})
                 except Exception as e:
                     chat.pop()

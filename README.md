@@ -2,7 +2,7 @@
 
 **Problem:** Product managers get hundreds of feature requests from app stores, support tickets, sales calls, NPS surveys, social media and forums, which makes patterns hard to see.
 
-**Agent:** Claude (`claude-opus-5-5`) reads every item, **categorizes** it, and **clusters** it by the underlying need ("night mode", "dark theme" and "the white background is blinding" become one cluster). The code then **counts and scores** each cluster to rank the most-demanded updates as a Now / Next / Later roadmap.
+**Agent:** an AI model (Claude `claude-opus-5-5`, or Google Gemini) reads every item, **categorizes** it, and **clusters** it by the underlying need ("night mode", "dark theme" and "the white background is blinding" become one cluster). The code then **counts and scores** each cluster to rank the most-demanded updates as a Now / Next / Later roadmap.
 
 ## Features
 - **Overview:** KPIs, the executive summary, a ranked chart, and the top-priority cards.
@@ -13,26 +13,29 @@
 - **Ask the agent:** chat with Claude about the results, with answers that cite feedback IDs.
 - **Interactive scoring:** sliders for the score weights and filters by channel, plan and date. The roadmap re-ranks live.
 - **Export:** Markdown, an HTML dashboard, JSON, and the clustered feedback as CSV.
+- **Two AI providers:** Claude or Gemini, which you switch in the sidebar. Gemini has a free tier.
 - Light and dark themes that follow your system setting.
 
 ## Live demo
-- **Streamlit app:** _link added after deployment_
-- **Colab notebook:** _link added after deployment_
+- **Streamlit app:** https://signal-feedback-roadmap.streamlit.app
+- **Colab notebook:** [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/srakshita2803-hub/Feedback-Roadmapping-Agent/blob/main/Feedback_Roadmap_Agent.ipynb)
 
 ## Deploy on Streamlit Community Cloud (permanent link)
 1. Put these files in a public GitHub repository.
 2. At [share.streamlit.io](https://share.streamlit.io), click **Create app**, choose the repo and branch `main`, and set the main file to `app.py`.
-3. Optional: under **App settings → Secrets**, add:
+3. Optional: under **App settings → Secrets**, add one or both keys:
    ```toml
-   ANTHROPIC_API_KEY = "sk-ant-..."
+   ANTHROPIC_API_KEY = "sk-ant-..."   # Claude
+   GEMINI_API_KEY = "AIza..."         # Gemini (free key at aistudio.google.com/app/apikey)
+   # GEMINI_MODEL = "gemini-flash-latest"   # optional: pin a specific Gemini model
    ```
-   Without it, visitors can paste their own key or use the offline baseline.
+   Without a key, visitors can paste their own in the sidebar or use the offline baseline.
 
 > ⚠️ With a server key set, anyone with the link can run the agent on your bill. Set a spending limit in the Anthropic Console. The key is used only on the server and is never sent to the browser.
 
 ## Run it on Google Colab
 1. Open `Feedback_Roadmap_Agent.ipynb` in [Colab](https://colab.research.google.com): **File → Open notebook → GitHub** and paste the repo URL, or upload the file.
-2. In the **🔑 Secrets** panel, add `ANTHROPIC_API_KEY` and turn on notebook access. Without a key, the offline baseline still works.
+2. In the **🔑 Secrets** panel, add `ANTHROPIC_API_KEY` and/or `GEMINI_API_KEY` and turn on notebook access. Without a key, the offline baseline still works.
 3. Choose **Runtime → Run all**. The last cell starts Streamlit and prints a public `https://….trycloudflare.com` link to the app. That link works only while the Colab runtime is running.
 
 The notebook is self-contained: it writes every project file with `%%writefile`, so you don't need to upload anything else.
@@ -46,6 +49,9 @@ streamlit run app.py
 ```
 ```bash
 python main.py data/feedback.csv --offline
+```
+```bash
+python main.py data/feedback.csv --provider gemini
 ```
 
 ## How it works
@@ -66,7 +72,7 @@ Bugs and non-requests (praise, billing questions) are kept out of the roadmap bu
 - `app.py`: the Streamlit front-end ("Signal")
 - `.streamlit/config.toml`: the app's light and dark theme
 - `roadmap_agent/assistant.py`: Ask-the-agent chat and PRD drafting
-- `roadmap_agent/agent.py`: the system prompt, tools, and agent loop (Anthropic SDK tool runner)
+- `roadmap_agent/agent.py`: the system prompt, the tools, and the agent loop for Claude (Anthropic SDK tool runner) and Gemini (Google Gen AI SDK automatic function calling)
 - `roadmap_agent/store.py`: the feedback store, clustering operations, and scoring
 - `roadmap_agent/offline.py`: a keyword-rule baseline that needs no API key
 - `roadmap_agent/report.py`: report rendering
