@@ -1,0 +1,81 @@
+id,date,channel,customer,plan,arr,text
+F001,2026-07-02,app_store,anon_1123,free,0,Please add a dark mode! My eyes hurt using this at night.
+F002,2026-07-03,support_ticket,Acme Corp,enterprise,120000,"We need SAML SSO with Okta before our security team will approve rollout to 2,000 seats."
+F003,2026-07-03,sales_call,Northwind Traders,enterprise,85000,Procurement is blocked on single sign-on. They use Azure AD. Deal at risk without it.
+F004,2026-07-04,community_forum,jdoe_pm,pro,1200,Would love a Slack integration so task updates post to our team channel.
+F005,2026-07-05,nps_survey,Brightside Labs,pro,4800,Exporting reports to Excel is painful - copy/paste every week. Give us a CSV export.
+F006,2026-07-05,app_store,anon_2201,free,0,The app is unusable on the subway. Need offline mode on mobile!
+F007,2026-07-06,support_ticket,Globex,enterprise,210000,Our execs want custom dashboards with the KPIs they care about instead of the fixed overview page.
+F008,2026-07-07,twitter,@sarah_builds,pro,600,Dark theme when?? Every other tool I use has one.
+F009,2026-07-08,support_ticket,Initech,business,24000,Can you add webhooks so we can trigger our internal workflows when a ticket closes?
+F010,2026-07-08,nps_survey,Hooli,enterprise,150000,"Love the product, but no SSO is a dealbreaker for renewal. Okta please."
+F011,2026-07-09,community_forum,maria_ops,business,9000,Need recurring tasks - we create the same weekly checklist by hand every Monday.
+F012,2026-07-10,support_ticket,Umbrella Inc,business,18000,Dashboard takes 12 seconds to load with our 40k records. Very slow.
+F013,2026-07-10,app_store,anon_3302,free,0,Would pay for Pro if there was a dark mode.
+F014,2026-07-11,sales_call,Stark Industries,enterprise,300000,Security questionnaire requires enforced 2FA for all users and SSO. Both are must-haves.
+F015,2026-07-12,community_forum,devon_k,pro,1200,Microsoft Teams integration please. We are not a Slack shop.
+F016,2026-07-12,nps_survey,Vandelay Imports,business,12000,Please let us export everything to PDF for our board packs.
+F017,2026-07-13,support_ticket,Wayne Enterprises,enterprise,260000,Need a public REST API to sync data with our data warehouse.
+F018,2026-07-14,app_store,anon_4410,free,0,App crashes every time I open the calendar view on Android 15.
+F019,2026-07-14,twitter,@techlead_amy,pro,600,"Offline support for the iOS app would be huge, I travel a lot."
+F020,2026-07-15,support_ticket,Soylent Co,business,15000,Can we build our own reports? The built-in ones don't match how we measure throughput.
+F021,2026-07-15,community_forum,raj_m,pro,1200,Templates for recurring projects would save us hours each sprint.
+F022,2026-07-16,nps_survey,Massive Dynamic,enterprise,180000,Add two-factor authentication. Our auditors flagged the lack of MFA.
+F023,2026-07-17,sales_call,Cyberdyne,enterprise,95000,Prospect requires SCIM provisioning and SAML SSO to move forward.
+F024,2026-07-17,app_store,anon_5120,free,0,Dark mode is the only thing missing. 4 stars until then.
+F025,2026-07-18,support_ticket,Acme Corp,enterprise,120000,Following up on SSO request - our CISO is asking for a timeline.
+F026,2026-07-19,community_forum,lin_design,pro,1200,Bulk export of all project data as CSV would make migrations and backups so much easier.
+F027,2026-07-19,twitter,@nightowl_dev,free,0,Begging for a dark UI. Please.
+F028,2026-07-20,support_ticket,Pied Piper,business,20000,Slack notifications when someone mentions me would be amazing.
+F029,2026-07-21,nps_survey,Brightside Labs,pro,4800,Interface feels sluggish when switching between projects.
+F030,2026-07-21,sales_call,Oceanic Airlines,enterprise,140000,They need the product in Spanish and Portuguese for LATAM teams.
+F031,2026-07-22,app_store,anon_6001,free,0,Great app! Really helped our small team get organized.
+F032,2026-07-23,support_ticket,Globex,enterprise,210000,Need to schedule dashboards to email to leadership every Friday.
+F033,2026-07-23,community_forum,ken_w,business,9000,Please support webhooks + an API key per workspace so we can automate.
+F034,2026-07-24,support_ticket,Initech,business,24000,Our API integration keeps getting rate limited at 60 req/min. Please raise limits.
+F035,2026-07-25,twitter,@pm_jules,pro,600,Need a way to export my data. Feels locked in right now.
+F036,2026-07-25,app_store,anon_7123,free,0,No offline mode = I can't use it on flights. Deleting.
+F037,2026-07-26,nps_survey,Hooli,enterprise,150000,Two-factor login should be enforceable by admins.
+F038,2026-07-27,support_ticket,Umbrella Inc,business,18000,Search is very slow - takes several seconds to return results.
+F039,2026-07-27,community_forum,ana_lead,business,9000,Recurring tasks are a basic feature - surprised it's missing.
+F040,2026-07-28,sales_call,Tyrell Corp,enterprise,110000,"Lost the evaluation to a competitor mainly because of no Slack/Teams integration."
+F041,2026-07-29,support_ticket,Vandelay Imports,business,12000,I was charged twice this month. Please refund.
+F042,2026-07-29,app_store,anon_8210,free,0,Night mode please - the white background is blinding.
+F043,2026-07-30,nps_survey,Soylent Co,business,15000,Custom charts and the ability to pick which metrics show on the home dashboard.
+F044,2026-07-31,community_forum,tom_r,pro,1200,Is there a way to use the app offline on Android? Would really help field teams.
+F045,2026-08-01,support_ticket,Wayne Enterprises,enterprise,260000,Still waiting on SSO via Okta. Blocking expansion to 3 more business units.
+F046,2026-08-02,twitter,@ux_kate,pro,600,Please localize to German - half our team would prefer it.
+F047,2026-08-03,sales_call,Monsters Inc,business,30000,Wants to export Gantt charts to PDF for client presentations.
+F048,2026-08-04,app_store,anon_9001,free,0,"Crashes when uploading attachments larger than 10MB on iPhone."
+F049,2026-08-04,support_ticket,Pied Piper,business,20000,We'd love a native Microsoft Teams app with notifications.
+F050,2026-08-05,nps_survey,Massive Dynamic,enterprise,180000,Admins need to enforce SSO-only login for compliance.
+F051,2026-08-06,community_forum,priya_s,pro,1200,Dark mode + high-contrast theme for accessibility please.
+F052,2026-08-07,support_ticket,Stark Industries,enterprise,300000,Need SCIM user provisioning tied to our IdP.
+F053,2026-08-08,twitter,@remote_ray,pro,600,Recurring reminders would make this my default task app.
+F054,2026-08-08,app_store,anon_1010,free,0,"Loading takes forever on 4G, can it be faster?"
+F055,2026-08-09,nps_survey,Initech,business,24000,The API is missing endpoints for comments and attachments.
+F056,2026-08-10,sales_call,Gringotts,enterprise,220000,Bank requires mandatory MFA and audit logs before purchase.
+F057,2026-08-11,support_ticket,Globex,enterprise,210000,Custom report builder with filters and grouping is our #1 ask.
+F058,2026-08-12,community_forum,omar_h,business,9000,An Excel export of time tracking data please.
+F059,2026-08-13,app_store,anon_1111,free,0,Offline access to my notes would be a game changer.
+F060,2026-08-13,twitter,@founder_lee,pro,600,Your onboarding is the best I've seen. Keep it up!
+F061,2026-08-14,support_ticket,Oceanic Airlines,enterprise,140000,Can the UI be translated to French for our Montreal office?
+F062,2026-08-15,nps_survey,Monsters Inc,business,30000,Integration with Slack would cut our status meetings in half.
+F063,2026-08-16,community_forum,zoe_t,pro,1200,Please add a dark mode option on desktop too.
+F064,2026-08-17,support_ticket,Hooli,enterprise,150000,Audit log of admin actions is required by our compliance team.
+F065,2026-08-18,sales_call,Acme Corp,enterprise,120000,Expansion of 1500 seats contingent on SSO shipping this quarter.
+F066,2026-08-19,app_store,anon_1212,free,0,Repeat tasks feature please - daily habits would be perfect here.
+F067,2026-08-20,support_ticket,Cyberdyne,enterprise,95000,Need audit logs exportable to our SIEM.
+F068,2026-08-21,twitter,@dataguy,pro,600,"API docs are thin and there's no webhook support, so building on you is hard."
+F069,2026-08-22,nps_survey,Umbrella Inc,business,18000,Performance with large projects is getting worse every month.
+F070,2026-08-23,community_forum,bea_c,pro,1200,How do I change my billing email?
+F071,2026-08-24,support_ticket,Soylent Co,business,15000,Please let us save custom report views and share them with the team.
+F072,2026-08-25,app_store,anon_1313,free,0,Pleeease dark mode
+F073,2026-08-26,sales_call,Wonka Industries,business,40000,Requires Google Workspace SSO for their 300 users.
+F074,2026-08-27,support_ticket,Vandelay Imports,business,12000,Export to CSV is missing custom fields.
+F075,2026-08-28,community_forum,eli_m,business,9000,Teams integration so approvals can happen in chat.
+F076,2026-08-29,nps_survey,Gringotts,enterprise,220000,Two-factor authentication via authenticator app is required.
+F077,2026-08-30,app_store,anon_1414,free,0,Offline mode for when I'm on job sites without signal.
+F078,2026-08-31,support_ticket,Tyrell Corp,enterprise,110000,Spanish localization needed for our Madrid team.
+F079,2026-09-01,twitter,@mobile_max,pro,600,App freezes when scrolling long lists on Android.
+F080,2026-09-02,support_ticket,Wayne Enterprises,enterprise,260000,Higher API rate limits and bulk endpoints for our nightly sync.

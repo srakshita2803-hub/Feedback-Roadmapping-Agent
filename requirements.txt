@@ -1,0 +1,4 @@
+anthropic>=1.13.0
+streamlit>=1.40
+pandas
+altair
