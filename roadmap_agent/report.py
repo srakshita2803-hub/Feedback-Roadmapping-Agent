@@ -9,8 +9,8 @@ from pathlib import Path
 from .store import ROADMAP_CATEGORIES, FeedbackStore
 
 
-def build(store: FeedbackStore, result: dict) -> dict:
-    ranked = store.prioritize()
+def build(store: FeedbackStore, result: dict, weights: dict | None = None) -> dict:
+    ranked = store.prioritize(weights)
     other = [store.cluster_stats(c) for c in store.clusters.values()
              if c.category not in ROADMAP_CATEGORIES and c.feedback_ids]
     for s in ranked:

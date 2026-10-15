@@ -10,6 +10,16 @@ import re
 
 from .store import FeedbackStore
 
+# Rough build effort for the baseline (the Claude agent estimates its own).
+EFFORTS = {
+    "SCIM user provisioning": "M", "Single sign-on (SAML / Okta / Azure AD / Google)": "M",
+    "Two-factor authentication": "S", "Audit logs": "M", "Dark mode": "S",
+    "Slack & Microsoft Teams integration": "M", "Offline mode (mobile)": "L",
+    "Public API, webhooks & rate limits": "L", "Custom dashboards & report builder": "L",
+    "Data export (CSV / Excel / PDF)": "S", "Recurring tasks & templates": "S",
+    "Localization": "M", "Speed & performance": "M",
+}
+
 # (name, category, description, keyword regex) - first match wins, so order matters.
 RULES = [
     ("Crashes & freezes", "bug", "App crashes or freezes.", r"crash|freez"),
@@ -42,6 +52,7 @@ def cluster_offline(store: FeedbackStore) -> dict:
             if re.search(pattern, text):
                 if name not in ids:
                     ids[name] = store.create_cluster(name, desc, cat).id
+                    store.set_effort(ids[name], EFFORTS.get(name, "M"))
                 urgent = [f.id] if re.search(URGENT, text) else []
                 store.assign(ids[name], [f.id], urgent)
                 break

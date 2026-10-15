@@ -33,8 +33,10 @@ Work through it with your tools:
 4. Merge clusters that turn out to be duplicates. Keep going until get_unassigned returns nothing.
 5. Call get_priorities. The scores are computed in code from request volume, distinct accounts,
    revenue, channel breadth and urgency. Do not invent numbers; cite the ones the tool returns.
-6. Call submit_roadmap once with an executive summary and one rationale per roadmap cluster.
-   Note where the score alone is misleading (e.g. one huge account, or a cheap quick win)."""
+6. Call submit_roadmap once with an executive summary, one rationale per roadmap cluster, and a
+   rough build effort per roadmap cluster (S = days, M = a few weeks, L = a quarter or more) based on
+   typical SaaS engineering cost. Note where the score alone is misleading (e.g. one huge account,
+   or a cheap quick win)."""
 
 
 def build_tools(store: FeedbackStore, result: dict):
@@ -122,15 +124,18 @@ def build_tools(store: FeedbackStore, result: dict):
                                                 "accounts", "arr", "channels", "urgent")} for s in ranked])
 
     @beta_tool
-    def submit_roadmap(executive_summary: str, rationales: dict[str, str]) -> str:
+    def submit_roadmap(executive_summary: str, rationales: dict[str, str], efforts: dict[str, str]) -> str:
         """Submit the final roadmap. Call exactly once, after get_priorities.
 
         Args:
             executive_summary: 3-5 sentences for a product leader: the top themes, what to build now, and key risks.
             rationales: Map of cluster id -> 1-2 sentence rationale grounded in the numbers and quotes.
+            efforts: Map of cluster id -> estimated build effort: "S", "M" or "L".
         """
         if store.unassigned():
             return f"ERROR: {len(store.unassigned())} items are still unassigned; call get_unassigned."
+        for cid, effort in efforts.items():
+            store.set_effort(cid, effort.strip().upper()[:1])
         result["executive_summary"] = executive_summary
         result["rationales"] = rationales
         return "Roadmap saved."

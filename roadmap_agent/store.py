@@ -55,6 +55,10 @@ class Cluster:
     category: str
     feedback_ids: list[str] = field(default_factory=list)
     urgent_ids: set[str] = field(default_factory=set)
+    effort: str = "M"  # rough build effort: S, M or L
+
+
+EFFORT_POINTS = {"S": 1, "M": 2, "L": 3}
 
 
 class FeedbackStore:
@@ -131,6 +135,21 @@ class FeedbackStore:
         del self.clusters[source_id]
         return {"merged_into": target_id, "size": len(tgt.feedback_ids)}
 
+    def set_effort(self, cluster_id: str, effort: str) -> None:
+        if cluster_id in self.clusters and effort in EFFORT_POINTS:
+            self.clusters[cluster_id].effort = effort
+
+    def subset(self, keep: set[str]) -> "FeedbackStore":
+        """A copy limited to the given feedback ids, with the same clusters (used for UI filters)."""
+        sub = FeedbackStore([f for fid, f in self.feedback.items() if fid in keep])
+        for c in self.clusters.values():
+            ids = [f for f in c.feedback_ids if f in keep]
+            sub.clusters[c.id] = Cluster(c.id, c.name, c.description, c.category, ids,
+                                         {u for u in c.urgent_ids if u in keep}, c.effort)
+            sub.assignment.update({f: c.id for f in ids})
+        sub._next = self._next
+        return sub
+
     def unassigned(self) -> list[str]:
         return [fid for fid in self.feedback if fid not in self.assignment]
 
@@ -151,13 +170,20 @@ class FeedbackStore:
             "arr": arr,
             "channels": sorted({i.channel for i in items}),
             "urgent": len(c.urgent_ids),
+            "effort": c.effort,
             "first_seen": dates[0] if dates else "",
             "last_seen": dates[-1] if dates else "",
             "quotes": [f"[{i.id} · {i.channel} · {i.customer}] {i.text}" for i in items[:3]],
         }
 
-    def prioritize(self) -> list[dict]:
-        """Rank roadmap-worthy clusters with a transparent weighted score (0-100)."""
+    def prioritize(self, weights: dict[str, float] | None = None) -> list[dict]:
+        """Rank roadmap-worthy clusters with a transparent weighted score (0-100).
+
+        `weights` overrides WEIGHTS (same keys); it is normalized so it need not sum to 1.
+        """
+        weights = weights or WEIGHTS
+        total = sum(weights.values()) or 1
+        weights = {k: v / total for k, v in weights.items()}
         stats = [self.cluster_stats(c) for c in self.clusters.values()
                  if c.category in ROADMAP_CATEGORIES and c.feedback_ids]
         if not stats:
@@ -172,7 +198,7 @@ class FeedbackStore:
                 "channels": len(s["channels"]) / n_channels,
                 "urgency": s["urgent"] / s["requests"],
             }
-            s["score"] = round(100 * sum(WEIGHTS[k] * v for k, v in parts.items()), 1)
+            s["score"] = round(100 * sum(weights.get(k, 0) * v for k, v in parts.items()), 1)
         stats.sort(key=lambda s: s["score"], reverse=True)
         for rank, s in enumerate(stats, 1):
             s["rank"] = rank

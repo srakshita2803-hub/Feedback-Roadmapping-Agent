@@ -4,6 +4,17 @@
 
 **Agent:** Claude (`claude-opus-5-5`) reads every item, **categorizes** it, and **clusters** it by the underlying need ("night mode", "dark theme" and "the white background is blinding" become one cluster). The code then **counts and scores** each cluster to rank the most-demanded updates as a Now / Next / Later roadmap.
 
+## Features
+- **Overview:** KPIs, the executive summary, a ranked chart, and the top-priority cards.
+- **Roadmap board:** Now / Next / Later columns of theme cards.
+- **Priority matrix:** impact vs. estimated effort, highlighting quick wins and big bets.
+- **Insights:** demand momentum over time, who is asking (by plan), a channel × theme heatmap, and the top accounts.
+- **Evidence:** every piece of feedback behind a theme, plus a one-click **PRD draft** from Claude.
+- **Ask the agent:** chat with Claude about the results, with answers that cite feedback IDs.
+- **Interactive scoring:** sliders for the score weights and filters by channel, plan and date. The roadmap re-ranks live.
+- **Export:** Markdown, an HTML dashboard, JSON, and the clustered feedback as CSV.
+- Light and dark themes that follow your system setting.
+
 ## Live demo
 - **Streamlit app:** _link added after deployment_
 - **Colab notebook:** _link added after deployment_
@@ -52,7 +63,9 @@ python main.py data/feedback.csv --offline
 Bugs and non-requests (praise, billing questions) are kept out of the roadmap but listed separately.
 
 ## Files
-- `app.py`: the Streamlit front-end (upload, run, ranking chart, evidence, Markdown/HTML/JSON export)
+- `app.py`: the Streamlit front-end ("Signal")
+- `.streamlit/config.toml`: the app's light and dark theme
+- `roadmap_agent/assistant.py`: Ask-the-agent chat and PRD drafting
 - `roadmap_agent/agent.py`: the system prompt, tools, and agent loop (Anthropic SDK tool runner)
 - `roadmap_agent/store.py`: the feedback store, clustering operations, and scoring
 - `roadmap_agent/offline.py`: a keyword-rule baseline that needs no API key
